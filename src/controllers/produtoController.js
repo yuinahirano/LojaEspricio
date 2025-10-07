@@ -2,7 +2,7 @@ const { produtoModel } = require("../models/produtoModel");
 
 const produtoController = {
     //---------------
-    //Listar todos os produtos
+    //LISTAR TODOS OS PRODUTOS
     //Get /produtos
     //---------------
     listarProdutos: async (req, res) => {
@@ -46,6 +46,8 @@ const produtoController = {
             res.status(500).json({erro: 'Erro no servidor ao cadastrar o produto!'});
         }
     }
+
 }
 
-module.exports = { produtoController };
+
+module.exports = { produtoController};
