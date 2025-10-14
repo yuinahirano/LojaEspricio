@@ -19,6 +19,28 @@ const clienteModel = {
             throw error;// passa o erro para o controller tratar
         }
     },
+
+    //-------------------------------
+    // BUSCAR pelos CFP dos clientes
+    // -------------------------------
+    buscarCpf: async(cpfCliente) => {
+        try {
+            const pool = await getConnection();
+            //procurar na tabela clientes na coluna de cpf
+            let querySQL = 'SELECT * FROM Clientes WHERE cpfCliente = @cpfCliente';
+
+            const result = await pool.request()
+            .input('cpfCliente', sql.Char(14), cpfCliente)
+            .query(querySQL);
+
+            return result.recordset;
+            
+        } catch (error) {
+            console.error('Error ao buscar o CPF do cliente:', error);
+            throw error;// passa o erro para o controller tratar
+        }
+    },
+
     
     // -------------------------------
     // INSERIR NOVOS CLIENTES

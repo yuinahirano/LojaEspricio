@@ -42,6 +42,13 @@ const clienteController = {
             if (cpfCliente.length < 14) {
                 return res.status(400).json({error: 'CPF inserido incorretamente! Verifique se escreveu corretamente todos os valores e se está nesse modelo: 000.000.000-00'})
             }
+            
+            //verifica se o cpf já existe no banco de dados/se ja foi registrado
+            const clientes = await clienteModel.buscarCpf(cpfCliente);
+            //se tiver o numero de clientes maior que zero, quer dizer que ja tem um cliente registrado com esse cpf
+            if (clientes.length>0) {
+                return res.status(409).json({erro: 'CPF já cadastrado!'});
+            }
 
             await clienteModel.inserirCliente(nomeCliente, cpfCliente); //await pois o processo pode demorar
 
