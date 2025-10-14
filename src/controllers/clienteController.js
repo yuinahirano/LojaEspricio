@@ -1,4 +1,4 @@
-const { clienteModel } = require("../models/produtoModel");
+const { clienteModel } = require("../models/clienteModel"); //buscar no cliente model
 
 const clienteController = {
     //---------------
@@ -7,7 +7,7 @@ const clienteController = {
     //---------------
     listarClientes: async (req, res) => {
         try {
-            const produtos = await clienteModel.buscarCliente();
+            const clientes = await clienteModel.buscarClientes();
 
             res.status(200).json(clientes);
         } catch (error) {

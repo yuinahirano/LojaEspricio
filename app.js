@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
 const {produtoRoutes} = require("./src/routes/produtoRoutes");
+const {clienteRoutes} = require("./src/routes/clienteRoute");//colocar /clienteRoute igual qundo criou o arquivo
 
 const PORT = 8081;
 
 app.use(express.json());
 
+//puxar as rotas
 app.use('/', produtoRoutes);
 app.use('/', clienteRoutes);
 

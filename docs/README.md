@@ -22,3 +22,34 @@
     "message": "Produto cadastrado com sucesso!"
 }
 ```
+
+### Clientes
+
+#### GET /clientes
+- **Descrição**: Obtém uma lista de clientes
+- **Response**: Array de clientes
+```
+[
+	{
+		"idClientes": "025CAD25-DB0B-42E1-9E9B-A7C13213A452",
+		"nomeCliente": "nomeExemplo",
+		"cpfCliente": "cpfExemplo"
+	}
+]
+```
+
+#### POST /clientes
+- **Descrição**: Cria um novo cliente
+- **Body**:
+```
+{
+    "nomeProduto": "clienteExemplo",
+    "precoProduto": "cpfExemplo"
+}
+```
+- **Response**: 
+```
+{
+	"message": "Cliente cadastrado com sucesso!"
+}
+```
