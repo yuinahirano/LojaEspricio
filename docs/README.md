@@ -19,7 +19,7 @@
 - **Response**: 
 ```
 {
-    "message": "Produto cadastrado com sucesso!"
+    "message": 'Produto cadastrado com sucesso!'
 }
 ```
 
@@ -31,7 +31,7 @@
 ```
 [
 	{
-		"idClientes": "025CAD25-DB0B-42E1-9E9B-A7C13213A452",
+		"idClientes": "idExemplo",
 		"nomeCliente": "nomeExemplo",
 		"cpfCliente": "cpfExemplo"
 	}
@@ -50,6 +50,6 @@
 - **Response**: 
 ```
 {
-	"message": "Cliente cadastrado com sucesso!"
+	"message": 'Cliente cadastrado com sucesso!'
 }
 ```
