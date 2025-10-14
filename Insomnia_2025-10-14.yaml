@@ -1,0 +1,139 @@
+type: collection.insomnia.rest/5.0
+name: S1_R6-AT1_PBE1
+meta:
+  id: wrk_20a2eaf4223b4e598484b0a7ce8c4a6b
+  created: 1759863360456
+  modified: 1759863360456
+  description: ""
+collection:
+  - name: Produtos
+    meta:
+      id: fld_9b3f72bdba724d8a8de569a1b70188c1
+      created: 1759854605485
+      modified: 1759863447704
+      sortKey: -1759854605485
+      description: ""
+    children:
+      - url: localhost:8081/produtos
+        name: Listar produtos
+        meta:
+          id: req_91db9b47d3eb4807b7da993cb4fc679d
+          created: 1759854611958
+          modified: 1759859351952
+          isPrivate: false
+          description: ""
+          sortKey: -1759854611958
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: localhost:8081/produtos
+        name: Criar produtos
+        meta:
+          id: req_5f9b2cb4b7bc42639965415c39ca0c00
+          created: 1759859354535
+          modified: 1759859414693
+          isPrivate: false
+          description: ""
+          sortKey: -1759859354535
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nomeProduto": "Abobrinha",
+            	"precoProduto": 5.50
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Clientes
+    meta:
+      id: fld_2d8cb114ab2746ef97602534d48f3bf3
+      created: 1759863398177
+      modified: 1760439980958
+      sortKey: -1759863398177
+      description: ""
+    children:
+      - url: localhost:8081/clientes
+        name: Listar clientes
+        meta:
+          id: req_47cdf317f21e46c5ae0d2eefbbf45230
+          created: 1759863379710
+          modified: 1759863625639
+          isPrivate: false
+          description: ""
+          sortKey: -1759863400022
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8081/clientes
+        name: Criar cliente
+        meta:
+          id: req_7c2b40beeb7c46f085eb46dada22ebe3
+          created: 1760441650066
+          modified: 1760445744590
+          isPrivate: false
+          description: ""
+          sortKey: -1760441650066
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"nomeCliente": "Sabrina Poderosa",
+            	"cpfCliente": "221.340.668-57"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e7827a2e3780dabd3b246b6961ce95aac8fdcb8c
+    created: 1759863360489
+    modified: 1759863360489
+environments:
+  name: Base Environment
+  meta:
+    id: env_e7827a2e3780dabd3b246b6961ce95aac8fdcb8c
+    created: 1759863360483
+    modified: 1759863360483
+    isPrivate: false

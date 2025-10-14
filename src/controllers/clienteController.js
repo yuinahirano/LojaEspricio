@@ -38,6 +38,11 @@ const clienteController = {
                 return res.status(400).json({error: 'Campos obrigatórios não preenchidos!'});
             }
 
+            //verifica se o cliente escreveu o cpf no modelo certo, pois no char precisa OBRIGATORIAMENTE 14 caracteres
+            if (cpfCliente.length < 14) {
+                return res.status(400).json({error: 'CPF inserido incorretamente! Verifique se escreveu corretamente todos os valores e se está nesse modelo: 000.000.000-00'})
+            }
+
             await clienteModel.inserirCliente(nomeCliente, cpfCliente); //await pois o processo pode demorar
 
             res.status(201).json({message: 'Cliente cadastrado com sucesso!'});
