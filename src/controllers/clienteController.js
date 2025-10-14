@@ -39,6 +39,7 @@ const clienteController = {
             }
 
             //verifica se o cliente escreveu o cpf no modelo certo, pois no char precisa OBRIGATORIAMENTE 14 caracteres
+            //length ve o tamanho
             if (cpfCliente.length < 14) {
                 return res.status(400).json({error: 'CPF inserido incorretamente! Verifique se escreveu corretamente todos os valores e se está nesse modelo: 000.000.000-00'})
             }

@@ -27,7 +27,7 @@ const clienteModel = {
         try {
             const pool = await getConnection();
             //procurar na tabela clientes na coluna de cpf
-            let querySQL = 'SELECT * FROM Clientes WHERE cpfCliente = @cpfCliente';
+            let querySQL = 'SELECT * FROM Clientes WHERE cpfCliente = @cpfCliente'; //@ chama variavel
 
             const result = await pool.request()
             .input('cpfCliente', sql.Char(14), cpfCliente)
