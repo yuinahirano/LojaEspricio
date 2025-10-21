@@ -2,11 +2,29 @@ const { produtoModel } = require("../models/produtoModel");
 
 const produtoController = {
     //---------------
-    //LISTAR TODOS OS PRODUTOS
+    //LISTAR TODOS os produtos e aqueles com base no ID
     //Get /produtos
     //---------------
     listarProdutos: async (req, res) => {
         try {
+            //query parameter para filtrar ou buscar dados sem alterar o recurso em si - tem como continuar listando todos
+            const { idProduto } = req.query;
+
+            //verifica se o id existe
+            if (idProduto) {
+
+                //verifica o tamanho do id, se contem todos os caracteres
+                if (idProduto.length != 36) {
+                    return res.status(400).json({ erro: 'Id do produto inválido!' });
+                }
+
+                //produtO
+                let produto = await produtoModel.buscarUm(idProduto);
+
+                return res.status(200).json(produto);
+            }
+
+            //produtoS
             const produtos = await produtoModel.buscarTodos();
 
             res.status(200).json(produtos);
@@ -15,6 +33,23 @@ const produtoController = {
             res.status(500).json({ message: 'Erro ao buscar produtos.' });
         }
     },
+
+    // //---------------
+    // //LISTAR produto com base no IDPRODUTO
+    // //Get /produtos
+    // //---------------
+    // listarIdProdutos: async (req, res) => {
+    //     try {
+    //         const { idProduto } = req.params
+    //         //usar buscarUm para pegar apenas a partir do id do produto, pois no model ele ja esta analisando somente as informações na coluna do idprodutos
+    //         const produtos = await produtoModel.buscarUm(idProduto);
+
+    //         res.status(200).json(produtos);
+    //     } catch (error) {
+    //         console.error('Erro ao listar produtos', error);
+    //         res.status(500).json({ message: 'Erro ao buscar produtos.' });
+    //     }
+    // },
 
     //---------------
     //CRIAR UM NOVO PRODUTO
@@ -92,7 +127,7 @@ const produtoController = {
 
     deletarProduto: async (req, res) => {
         try {
-            const { idProduto } = req.params; 
+            const { idProduto } = req.params;
 
             if (idProduto.length != 36) {
                 return res.status(400).json({ erro: 'Id do produto inváldo!' });
@@ -107,10 +142,10 @@ const produtoController = {
             }
 
             await produtoModel.deletarProduto(idProduto);
-            res.status(200).json({message: 'Produto deletado com sucesso!'});
-            
+            res.status(200).json({ message: 'Produto deletado com sucesso!' });
+
         } catch (error) {
-            res.status(500).json({error: 'Erro no servidor ao deletar o produto.'});
+            res.status(500).json({ error: 'Erro no servidor ao deletar o produto.' });
         }
     }
 
