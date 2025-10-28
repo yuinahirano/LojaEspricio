@@ -15,7 +15,7 @@ const produtoModel = {
 
             const result = await pool.request().query(sql);
 
-            return result.recordset;
+            return result.recordset; 
 
         } catch (error) {
             console.error('Error ao buscar produtos:', error);

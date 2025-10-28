@@ -1,3 +1,4 @@
+const { Transaction } = require("mssql");
 const { sql, getConnection } = require("../config/db");
 
 const pedidoModel = {
@@ -19,7 +20,7 @@ const pedidoModel = {
                 PD.dataPedido,
                 PD.statusPagamento,
                 PR.nomeProduto,
-                IT.qtdPedido
+                IT.qtdItem
             
             FROM Pedidos PD
                 INNER JOIN Clientes CL
@@ -41,7 +42,64 @@ const pedidoModel = {
             console.error("Erro ao buscar pedido", error);
             throw error;
         }
+    },
+
+    //----------------
+    //INSERIR PEDIDOS
+    //----------------
+    inserirPedidos: async (idCliente, dataPedido, statusPagamento, { itens }) => {
+        //{itens} realiza a desestruturação do objeto itens
+        //tem que ser antes do try catch, porque se alguma das operações der errado, o trycatch captura o erro e faz um roll back
+        const pool = await getConnection();
+
+        const transaction = new sql.Transaction(pool);
+        await transaction.begin(); //aguardar e inicio a transação
+
+        try {
+            //tem que ser uma variável pois ela vai mudar depois
+            //OUTPUT INSERTED.idPedidos: salva em uma tabela temporaria e devolve, antes de ser inserido na verdadeira tabela
+            let querySQL = `
+            INSERT INTO Pedidos(idCliente, dataPedido, statusPagamento)
+            OUTPUT INSERTED.idPedidos 
+            VALUES (@idCliente), @dataPedido, @statusPagamento
+            `
+
+            //uma request a partir da transação
+            const result = await transaction.request()
+            .input('idCliente', sql.UniqueIdentifier, idCliente)
+            .input('dataPedido', sql.Date, dataPedido)
+            .input('statusPagamento', sql.Bit, statusPagamento)
+            .query(querySQL);
+
+            const idPedido = result.recordset[0].idPedido; //devolve uma lista, uma array. O primeiro item no array é 0]
+            
+            //cada item de uma lista de itens, vai pegar um por um até terminar de executar tudo que precisa
+            for (const item of itens) {
+                //desestruturação
+                const {idProduto, qtdItem} = item;
+
+                querySQL = `
+                    INSERT INTO ItemPedido (idPedido, idProduto, qtdItem)
+                    VALUES (@idPedido, @idProduto, @qtdItem)
+                `
+
+                await transaction.request()
+                .input('idPedido', sql.UniqueIdentifier, idPedido)
+                .input('idProduto', sql.UniqueIdentifier, idProduto)
+                .input('qtdItem', sql.Int, qtdItem)
+                .query(querySQL);
+            }
+
+            await transaction.commit(); //confirma a transação (salva tudo no banco)
+
+        } catch (error) {
+            await transaction.rollback(); //desfaz tudo caso dê errado
+            console.error('Erro ao inserir pedido:', error);
+            throw error;
+
+        }
     }
-}
+
+};
 
 module.exports = { pedidoModel };
