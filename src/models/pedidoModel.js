@@ -19,21 +19,21 @@ const pedidoModel = {
             const pool = await getConnection(); //cria a conexão
             const querySQL = `
             SELECT 
-                CL.nomeCliente,
-                PD.dataPedido,
-                PD.statusPagamento,
+	            CL.nomeCliente,
+	            PD.dataPedido,
+	            PD.statusPagamento,
                 PR.nomeProduto,
                 IT.qtdItem
-            
+
             FROM Pedidos PD
+                INNER JOIN ItemPedido IT
+                ON IT.idPedido = PD.idPedido
+
                 INNER JOIN Clientes CL
-	            ON CL.idCliente = PD.idPedido
-	
-	            INNER JOIN ItemPedido IT
-	            ON IT.idPedido = PD.idPedido
-	
-	            INNER JOIN Produtos PR
-	            ON PR.idProduto = IT.idProduto
+                ON CL.idCliente = PD.idCliente
+
+                INNER JOIN Produtos PR
+                ON PR.idProduto = IT.idProduto
             `;
 
             const result = await pool.request()
@@ -50,7 +50,7 @@ const pedidoModel = {
     //----------------
     //INSERIR PEDIDOS
     //----------------
-    inserirPedidos: async (idCliente, dataPedido, statusPagamento, { itens }) => {
+    inserirPedido: async (idCliente, dataPedido, statusPagamento, { itens }) => {
         //{itens} realiza a desestruturação do objeto itens
         //tem que ser antes do try catch, porque se alguma das operações der errado, o trycatch captura o erro e faz um roll back
         const pool = await getConnection();
@@ -63,23 +63,23 @@ const pedidoModel = {
             //OUTPUT INSERTED.idPedidos: salva em uma tabela temporaria e devolve, antes de ser inserido na verdadeira tabela
             let querySQL = `
             INSERT INTO Pedidos(idCliente, dataPedido, statusPagamento)
-            OUTPUT INSERTED.idPedidos 
-            VALUES (@idCliente), @dataPedido, @statusPagamento
+            OUTPUT INSERTED.idPedido
+            VALUES (@idCliente, @dataPedido, @statusPagamento)
             `
 
             //uma request a partir da transação
             const result = await transaction.request()
-            .input('idCliente', sql.UniqueIdentifier, idCliente)
-            .input('dataPedido', sql.Date, dataPedido)
-            .input('statusPagamento', sql.Bit, statusPagamento)
-            .query(querySQL);
+                .input('idCliente', sql.UniqueIdentifier, idCliente)
+                .input('dataPedido', sql.Date, dataPedido)
+                .input('statusPagamento', sql.Bit, statusPagamento)
+                .query(querySQL);
 
             const idPedido = result.recordset[0].idPedido; //devolve uma lista, uma array. O primeiro item no array é 0]
-            
+
             //cada item de uma lista de itens, vai pegar um por um até terminar de executar tudo que precisa
             for (const item of itens) {
                 //desestruturação
-                const {idProduto, qtdItem} = item;
+                const { idProduto, qtdItem } = item;
 
                 querySQL = `
                     INSERT INTO ItemPedido (idPedido, idProduto, qtdItem)
@@ -87,10 +87,10 @@ const pedidoModel = {
                 `
 
                 await transaction.request()
-                .input('idPedido', sql.UniqueIdentifier, idPedido)
-                .input('idProduto', sql.UniqueIdentifier, idProduto)
-                .input('qtdItem', sql.Int, qtdItem)
-                .query(querySQL);
+                    .input('idPedido', sql.UniqueIdentifier, idPedido)
+                    .input('idProduto', sql.UniqueIdentifier, idProduto)
+                    .input('qtdItem', sql.Int, qtdItem)
+                    .query(querySQL);
             }
 
             await transaction.commit(); //confirma a transação (salva tudo no banco)

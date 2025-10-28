@@ -38,6 +38,7 @@ const pedidoController = {
             
             const {idCliente, dataPedido, statusPagamento, itens} = req.body;
 
+            //verifica se foi preenchidos os campos
             if (idCliente === undefined || dataPedido === undefined || statusPagamento === undefined || itens.length < 1) {
                 return res.status(400).json({error: 'Campos obrigatórios não preenchidos!'});
             }
@@ -54,26 +55,30 @@ const pedidoController = {
                 return res.status(404).json({error: 'Cliente não encontrado!'})
             }
             
-            //verifica se o cliente existe, dados dentro dos itens
+            //verifica se o prduto existe, dados dentro dos itens
             for (const item of itens) {
                 const {idProduto, qtdItem} = item;
                 
+                //verifica se o id do produto e a quantidade de itens foi inserida
                 if (idProduto === undefined || qtdItem === undefined) {
                     return res.status(400).json({error: 'Campos obrigatórios não preenchidos!'});
                 }
                 
+                //verifica se o id do produto tem 36 caracteres
                 if (idProduto.length != 36) {
                     return res.status(400).json({error: 'Id do produto inválido!'});
                 }
+
+                const produto = await produtoModel.buscarUm(idProduto);
+                
+                //verifica se existe o produto
+                if (!produto || produto.length != 1) {
+                    return res.status(404).json({error: 'Produto não encontrado.'})
+                }
             }
-
-            const produto = await produtoModel.buscarUm(idProduto);
-
-            if (!produto || produto.length != 1) {
-                return res.status(404).json({error: 'Produto não encontrado.'})
-            }
-
-            await pedidoModel.inserirPedidos(idCliente, dataPedido, statusPagamento, [itens]);
+            
+            
+            await pedidoModel.inserirPedido(idCliente, dataPedido, statusPagamento, {itens});
 
             res.status(201).json({message: 'Pedido cadastrado com sucesso!'})
             
