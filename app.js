@@ -7,7 +7,7 @@ const PORT = 8081;
 
 app.use(express.json());
 
-//rotas
+//rotas, configurar uma por vez
 app.use('/', produtoRoutes);
 app.use('/', clienteRoutes);
 

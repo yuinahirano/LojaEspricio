@@ -7,9 +7,28 @@ const clienteController = {
     //---------------
     listarClientes: async (req, res) => {
         try {
+            //query parameter para filtrar ou buscar dados sem alterar o recurso em si - tem como continuar listando todos
+            const { idCliente } = req.query;
+
+            //verifica se o id existe
+            if (idCliente) {
+
+                //verifica o tamanho do id, se contem todos os caracteres
+                if (idCliente.length != 36) {
+                    return res.status(400).json({ erro: 'Id do cliente inválido!' });
+                }
+
+                // consulta clientE
+                let cliente = await produtoModel.buscarUm(idCliente);
+
+                return res.status(200).json(cliente);
+            }
+
+            //consulta clientES
             const clientes = await clienteModel.buscarClientes();
 
             res.status(200).json(clientes);
+
         } catch (error) {
             console.error('Erro ao listar os clientes', error);
             res.status(500).json({ message: 'Erro ao buscar os clientes.' });
@@ -45,7 +64,7 @@ const clienteController = {
             }
             
             //verifica se o cpf já existe no banco de dados/se ja foi registrado
-            const clientes = await clienteModel.buscarCpf(cpfCliente);
+            const clientes = await clienteModel.buscarPorCpf(cpfCliente);
             //se tiver o numero de clientes maior que zero, quer dizer que ja tem um cliente registrado com esse cpf
             if (clientes.length>0) {
                 return res.status(409).json({erro: 'CPF já cadastrado!'});

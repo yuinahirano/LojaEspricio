@@ -1,5 +1,6 @@
 const { sql, getConnection } = require("../config/db");
 
+//objeto cliente model
 const clienteModel = {
     // -------------------------------
     // BUSCAR TODOS OS CLIENTES
@@ -16,14 +17,37 @@ const clienteModel = {
     
         } catch (error) {
             console.error('Error ao buscar clientes:', error);
-            throw error;// passa o erro para o controller tratar
+            throw error;// passa o erro para o controller tratar, o throw reverbera, captura o erro 
         }
     },
+
+    // -------------------
+    // BUSCAR UM cliente
+    // -------------------
+    buscarUm: async (idCliente) => {
+        try {
+            const pool = await getConnection();//faz uma conexão
+
+            //pega da tabela de produtos, a coluna de id de produtos
+            const querySQL = 'SELECT * FROM Clientes WHERE idCliente = @idCliente';
+
+            const result = await pool.request()
+                .input('idCliente', sql.UniqueIdentifier, idCliente)
+                .query(querySQL);
+
+            return result.recordset;
+
+        } catch (error) {
+            console.error('Erro ao buscar o cliente', error);
+            throw error; //passa o erro para o controller
+        }
+    },
+
 
     //-------------------------------
     // BUSCAR pelos CFP dos clientes
     // -------------------------------
-    buscarCpf: async(cpfCliente) => {
+    buscarPorCpf: async(cpfCliente) => {
         try {
             const pool = await getConnection();
             //procurar na tabela clientes na coluna de cpf

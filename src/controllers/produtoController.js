@@ -40,7 +40,7 @@ const produtoController = {
     // //---------------
     // listarIdProdutos: async (req, res) => {
     //     try {
-    //         const { idProduto } = req.params
+    //         const { idProduto } = req.query
     //         //usar buscarUm para pegar apenas a partir do id do produto, pois no model ele ja esta analisando somente as informações na coluna do idprodutos
     //         const produtos = await produtoModel.buscarUm(idProduto);
 
