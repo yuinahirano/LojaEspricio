@@ -5,7 +5,7 @@ const clienteModel = {
     // -------------------------------
     // BUSCAR TODOS OS CLIENTES
     // -------------------------------
-    buscarClientes: async () => {
+    buscarTodos: async () => {
         try {
     
             const pool = await getConnection(); // Cria um conjunto de conexões com o BD

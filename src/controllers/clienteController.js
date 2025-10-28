@@ -25,7 +25,7 @@ const clienteController = {
             }
 
             //consulta clientES
-            const clientes = await clienteModel.buscarClientes();
+            const clientes = await clienteModel.buscarTodos();
 
             res.status(200).json(clientes);
 
