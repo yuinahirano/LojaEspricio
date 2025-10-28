@@ -11,6 +11,9 @@ const pedidoModel = {
      * PROMISE: promete retornar o valor, seja erro ou não
      * @throws Mostra no console e propaga o erro caso a busca falhe
      */
+    //----------------
+    //BUSCAR PEDIDOS
+    //----------------
     buscarTodos: async () => {
         try {
             const pool = await getConnection(); //cria a conexão
@@ -34,7 +37,7 @@ const pedidoModel = {
             `;
 
             const result = await pool.request()
-                .query();
+                .query(querySQL);
 
             return result.recordset;
 

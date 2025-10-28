@@ -19,7 +19,7 @@ const clienteController = {
                 }
 
                 // consulta clientE
-                let cliente = await produtoModel.buscarUm(idCliente);
+                let cliente = await clienteModel.buscarUm(idCliente);
 
                 return res.status(200).json(cliente);
             }
